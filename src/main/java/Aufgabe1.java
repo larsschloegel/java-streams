@@ -1,28 +1,42 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Aufgabe1 {
 
-    public static void main(String[] args) {
-        //Array
-        final int[] zahlen = new int[] {9,1,8,2,7,3,6,4,5};
+    public static void main(final String[] args) throws Exception {
+        //1. Liste einlesen und ausgeben
+        /*Files.lines(Path.of("students.csv"))
+                .forEach(System.out::println);*/
 
-        //Liste "natürliche" sortiert ausgeben
-        Arrays.stream(zahlen).sorted().forEach(System.out::println);
+        //2. Überschrift entfernen.
+        /*Files.lines(Path.of("students.csv"))
+                .skip(1)
+                .forEach(System.out::println);*/
 
-        //mit Liste
-        /*List<Integer> list = Arrays.asList(9,1,8,2,7,3,6,4,5);
-        List<Integer> sortedList = list.stream()
-                .sorted()
-                .collect(Collectors.toList());
-        sortedList.forEach(System.out::println);*/
+        //3. Zu Klasse student umwandeln
+        //
+        Files.lines(Path.of("students.csv"))
+                .skip(1)
+                .filter(string -> !string.isEmpty())
+                //4. Duplikat entfernen.
+                .distinct()
+                //3. Zu Klasse student umwandeln
+                .map(line -> {
+                    String[] arr = line.split(",");
+                    return new Student(
+                            Integer.parseInt(arr[0]),
+                            arr[1],
+                            arr[2],
+                            Integer.parseInt(arr[3]));
+                }).forEach(System.out::println);
 
-        //Summe aller Zahlen ausgeben
-        System.out.println(Arrays.stream(zahlen).sum());
-        //Bonus: Produkt aller Zahlen ausgeben
-        System.out.println(Arrays.stream(zahlen).reduce(1,(x,y)->x*y));
+
     }
 }
